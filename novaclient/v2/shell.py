@@ -2199,6 +2199,10 @@ def _print_volume(volume):
     utils.print_dict(volume._info)
 
 
+def _print_mem(mem):
+    utils.print_dict(mem._info)
+
+
 def _print_volume_snapshot(snapshot):
     utils.print_dict(snapshot._info)
 
@@ -4829,6 +4833,43 @@ def do_interface_detach(cs, args):
 
     res = server.interface_detach(args.port_id)
     if isinstance(res, dict):
+        utils.print_dict(res)
+
+
+@utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+def do_mem_list(cs, args):
+    """List memory hotplugin attached to a server."""
+    server = _find_server(cs, args.server)
+    res = server.mem_list()
+    if type(res) is list:
+        utils.print_list(res, ['model', 'name', 'instance_uuid',
+                               'target_size', 'target_node'])
+
+
+@utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+@utils.arg('--mem-target-size', metavar='<mem_target_size>',
+           help=_('Memory Traget Size.'), dest="mem_target_size")
+@utils.arg('--mem-target-node', metavar='<mem_target_node>',
+           help=_('Memory Traget Node.'), dest="mem_target_node")
+@utils.arg('--mem-source-pagesize', metavar='<mem_source_pagesize>',
+           help=_('Memory Source PageSize.'), dest="mem_source_pagesize")
+@utils.arg('--mem-source-nodemask', metavar='<mem_source_nodemask>',
+           help=_('Memory Source NodeMask.'), dest="mem_source_nodemask")
+def do_mem_attach(cs, args):
+    """Attach a memory hotplugin to a server."""
+    server = _find_server(cs, args.server)
+    mem = server.mem_attach(args.mem_target_size, args.mem_target_node,
+                            args.mem_source_pagesize, args.mem_source_nodemask)
+    _print_mem(mem)
+
+
+@utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+@utils.arg('mem_name', metavar='<mem_name>', help=_('Memory hotplugin Name.'))
+def do_mem_detach(cs, args):
+    """Detach a memory hotplugin from a server."""
+    server = _find_server(cs, args.server)
+    res = server.mem_detach(args.mem_name)
+    if type(res) is dict:
         utils.print_dict(res)
 
 

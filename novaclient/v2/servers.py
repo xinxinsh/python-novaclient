@@ -522,6 +522,27 @@ class Server(base.Resource):
         """
         return self.manager.interface_detach(self, port_id)
 
+    def mem_list(self):
+        """
+        List memorys attached to an instance.
+        """
+        return self.manager.mem_list(self)
+
+    def mem_attach(self, mem_target_size, mem_target_node,
+                   mem_source_pagesize, mem_source_nodemask):
+        """
+        Attach a memory interface to an instance.
+        """
+        return self.manager.mem_attach(self, mem_target_size, mem_target_node,
+                                       mem_source_pagesize,
+                                       mem_source_nodemask)
+
+    def mem_detach(self, mem_name):
+        """
+        Detach a memory interface from an instance.
+        """
+        return self.manager.mem_detach(self, mem_name)
+
     def trigger_crash_dump(self):
         """Trigger crash dump in an instance"""
         return self.manager.trigger_crash_dump(self)
@@ -1668,6 +1689,49 @@ class ServerManager(base.BootingManagerWithFind):
         """
         return self._delete('/servers/%s/os-interface/%s' %
                             (base.getid(server), port_id))
+
+    def mem_list(self, server):
+        """
+        List attached memory hotplugin
+
+        :param server: The :class:`Server` (or its ID) to query.
+        """
+        return self._list('/servers/%s/os-mem' % base.getid(server),
+                          'memAttachments')
+
+    def mem_attach(self, server, mem_target_size, mem_target_node,
+                   mem_source_pagesize,
+                   mem_source_nodemask):
+        """
+        Attach a memory hotplugin to an instance.
+
+        :param server: The :class:`Server` (or its ID) to attach to.
+        :param mem_target_size: The memory size to attach.
+        :param mem_target_node: The memory node to attach.
+        :param mem_source_pagesize: The memory source pagesize to attach.
+        :param mem_source_nodemask: The memory source nodemask to attach.
+        """
+        body = {'memAttachment': {}}
+        if mem_target_size:
+            body['memAttachment']['target_size'] = mem_target_size
+        if mem_target_node:
+            body['memAttachment']['target_node'] = mem_target_node
+        if mem_source_pagesize:
+            body['memAttachment']['source_pagesize'] = mem_source_pagesize
+        if mem_source_nodemask:
+            body['memAttachment']['source_nodemask'] = mem_source_nodemask
+        return self._create('/servers/%s/os-mem' % base.getid(server),
+                            body, 'memAttachment')
+
+    def mem_detach(self, server, mem_name):
+        """
+        Detach a memory_hotplugin from an instance.
+
+        :param server: The :class:`Server` (or its ID) to detach from.
+        :param mem_name: The mem_hotplugin to detach.
+        """
+        self._delete('/servers/%s/os-mem/%s' % (base.getid(server),
+                                                mem_name))
 
     @api_versions.wraps("2.17")
     def trigger_crash_dump(self, server):
