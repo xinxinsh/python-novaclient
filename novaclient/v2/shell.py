@@ -4873,6 +4873,25 @@ def do_mem_detach(cs, args):
         utils.print_dict(res)
 
 
+@utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+@utils.arg('cpu_num', metavar='<cpu_num>', help=_('Cpu hotpluin Number.'))
+def do_cpu_hotplug(cs, args):
+    """Hot plugin cpu from a server."""
+    server = _find_server(cs, args.server)
+    res = server.cpu_hotplug(args.cpu_num)
+    cpu_data = res["cpu_data"]
+    utils.print_dict(cpu_data)
+
+
+@utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+def do_cpu_show(cs, args):
+    """Show current cpu and max cpu from a server."""
+    server = _find_server(cs, args.server)
+    res = server.cpu_show()
+    cpu_data = res["cpu_data"]
+    utils.print_dict(cpu_data)
+
+
 @api_versions.wraps("2.17")
 @cliutils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
 def do_trigger_crash_dump(cs, args):

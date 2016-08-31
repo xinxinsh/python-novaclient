@@ -543,6 +543,21 @@ class Server(base.Resource):
         """
         return self.manager.mem_detach(self, mem_name)
 
+    def cpu_hotplug(self, cpu_num):
+        """
+        Hot plugin cpu from an instance.
+        :param server: The :class:`Server` (or its ID) to detach from.
+        :param cpu_num: The cpu num to hotplugin.
+        """
+        return self.manager.cpu_hotplug(self, cpu_num)
+
+    def cpu_show(self):
+        """
+        Show current and max cpu from an instance.
+        :param server: The :class:`Server` (or its ID) to detach from.
+        """
+        return self.manager.cpu_show(self)
+
     def trigger_crash_dump(self):
         """Trigger crash dump in an instance"""
         return self.manager.trigger_crash_dump(self)
@@ -1732,6 +1747,21 @@ class ServerManager(base.BootingManagerWithFind):
         """
         self._delete('/servers/%s/os-mem/%s' % (base.getid(server),
                                                 mem_name))
+
+    def cpu_hotplug(self, server, cpu_num):
+        """
+        Hot plugin cpu from an instance.
+        :param server: The :class:`Server` (or its ID) to detach from.
+        :param cpu_num: The cpu num to hotplug.
+        """
+        return self._action('cpu_hotplug', server, {'cpu_num': cpu_num})
+
+    def cpu_show(self, server):
+        """
+        Show current and max cpu from an instance.
+        :param server: The :class:`Server` (or its ID) to detach from.
+        """
+        return self._action('cpu_show', server)
 
     @api_versions.wraps("2.17")
     def trigger_crash_dump(self, server):
