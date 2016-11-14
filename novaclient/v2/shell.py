@@ -4874,6 +4874,16 @@ def do_mem_detach(cs, args):
 
 
 @utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+@utils.arg('mem_name', metavar='<mem_name>', help=_('Memory hotplugin Name.'))
+def do_mem_clean(cs, args):
+    """Clean a memory hotplugin from a server."""
+    server = _find_server(cs, args.server)
+    res = server.mem_clean(args.mem_name)
+    if type(res) is dict:
+        utils.print_dict(res)
+
+
+@utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
 @utils.arg('cpu_num', metavar='<cpu_num>', help=_('Cpu hotpluin Number.'))
 def do_cpu_hotplug(cs, args):
     """Hot plugin cpu from a server."""

@@ -543,6 +543,12 @@ class Server(base.Resource):
         """
         return self.manager.mem_detach(self, mem_name)
 
+    def mem_clean(self, mem_name):
+        """
+        Clean a memory interface from an instance.
+        """
+        return self.manager.mem_clean(self, mem_name)
+
     def cpu_hotplug(self, cpu_num):
         """
         Hot plugin cpu from an instance.
@@ -1747,6 +1753,17 @@ class ServerManager(base.BootingManagerWithFind):
         """
         self._delete('/servers/%s/os-mem/%s' % (base.getid(server),
                                                 mem_name))
+
+    def mem_clean(self, server, mem_name):
+        """
+        Clean a memory_hotplugin from an stopd instance.
+
+        :param server: The :class:`Server` (or its ID) to detach from.
+        :param mem_name: The mem_hotplugin to clean.
+        """
+        body = {}
+        self._update('/servers/%s/os-mem/%s' % (base.getid(server),
+                                                mem_name), body)
 
     def cpu_hotplug(self, server, cpu_num):
         """
