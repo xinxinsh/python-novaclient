@@ -4841,9 +4841,8 @@ def do_mem_list(cs, args):
     """List memory hotplugin attached to a server."""
     server = _find_server(cs, args.server)
     res = server.mem_list()
-    if type(res) is list:
-        utils.print_list(res, ['model', 'name', 'instance_uuid',
-                               'target_size', 'target_node'])
+    utils.print_list(res, ['model', 'name', 'instance_uuid',
+                           'target_size', 'target_node'])
 
 
 @utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
