@@ -353,6 +353,14 @@ class Server(base.Resource):
         """
         return self.manager.resize(self, flavor, **kwargs)
 
+    def resize_local(self, flavor, **kwargs):
+        """
+        Resize the local server's resources.
+
+        :param flavor: the :class:`Flavor` (or its ID) to resize to.
+        """
+        return self.manager.resize_local(self, flavor, **kwargs)
+
     def create_image(self, image_name, metadata=None):
         """
         Create an image based on this server.
@@ -1436,6 +1444,21 @@ class ServerManager(base.BootingManagerWithFind):
             info['OS-DCF:diskConfig'] = disk_config
 
         return self._action('resize', server, info=info, **kwargs)
+
+    def resize_local(self, server, flavor, disk_config=None, **kwargs):
+        """
+        Resize a server's resources.
+
+        :param server: The :class:`Server` (or its ID) to share onto.
+        :param flavor: the :class:`Flavor` (or its ID) to resize to.
+        :param disk_config: partitioning mode to use on the rebuilt server.
+                            Valid values are 'AUTO' or 'MANUAL'
+        """
+        info = {'flavorRef': base.getid(flavor)}
+        if disk_config is not None:
+            info['OS-DCF:diskConfig'] = disk_config
+
+        return self._action('resize_local', server, info=info, **kwargs)
 
     def confirm_resize(self, server):
         """

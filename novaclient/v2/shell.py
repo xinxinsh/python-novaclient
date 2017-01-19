@@ -1759,6 +1759,19 @@ def do_resize(cs, args):
 
 
 @cliutils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
+@cliutils.arg(
+    'flavor',
+    metavar='<flavor>',
+    help=_("Name or ID of new flavor."))
+def do_resize_local(cs, args):
+    """Resize a local server."""
+    server = _find_server(cs, args.server)
+    flavor = _find_flavor(cs, args.flavor)
+    kwargs = utils.get_resource_manager_extra_kwargs(do_resize_local, args)
+    server.resize_local(flavor, **kwargs)
+
+
+@cliutils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
 def do_resize_confirm(cs, args):
     """Confirm a previous resize."""
     _find_server(cs, args.server).confirm_resize()
