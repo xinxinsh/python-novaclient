@@ -5176,3 +5176,68 @@ def do_virtual_interface_list(cs, args):
     server = _find_server(cs, args.server)
     interface_list = cs.virtual_interfaces.list(base.getid(server))
     _print_virtual_interface_list(cs, interface_list)
+
+
+@cliutils.arg(
+    'server',
+    metavar='<server>',
+    help=_('ID of server.'))
+def do_cdrom_list(cs, args):
+    """List the cdrom."""
+    server = _find_server(cs, args.server)
+    instance_id = server.id
+    cdroms = cs.cdroms.list(instance_id)
+    utils.print_list(cdroms, ['name', 'host', 'physloc', 'status',
+                              'used_by', 'description'])
+
+
+@cliutils.arg(
+    'server',
+    metavar='<server>',
+    help=_('The id of the server.'))
+@cliutils.arg(
+    'cdrom',
+    metavar='<cdrom_name>',
+    help=_('The name of the cdrom'))
+def do_cdrom_attach(cs, args):
+    """Attach a volume to a server."""
+    server = _find_server(cs, args.server)
+    cs.cdroms.create_server_cdrom(server.id, args.cdrom)
+
+
+@cliutils.arg(
+    'server',
+    metavar='<server>',
+    help=_('The id of the server.'))
+@cliutils.arg(
+    'cdrom',
+    metavar='<cdrom_name>',
+    help=_('The name of the cdrom'))
+def do_cdrom_detach(cs, args):
+    """Detach a volume to a server."""
+    server = _find_server(cs, args.server)
+    cs.cdroms.delete_server_cdrom(server.id, args.cdrom)
+
+
+@cliutils.arg(
+    'server',
+    metavar='<server>',
+    help=_('The id of the server.'))
+@cliutils.arg(
+    'iso',
+    metavar='<iso>',
+    help=_('The id of the iso'))
+def do_iso_attach(cs, args):
+    """Attach a iso to a server."""
+    server = _find_server(cs, args.server)
+    cs.isos.attach_iso(server.id, args.iso)
+
+
+@cliutils.arg(
+    'server',
+    metavar='<server>',
+    help=_('The id of the server.'))
+def do_iso_detach(cs, args):
+    """Detach a iso to a server."""
+    server = _find_server(cs, args.server)
+    cs.isos.detach_iso(server.id)

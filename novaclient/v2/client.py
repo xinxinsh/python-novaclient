@@ -19,6 +19,7 @@ from novaclient.i18n import _LW
 from novaclient.v2 import agents
 from novaclient.v2 import aggregates
 from novaclient.v2 import availability_zones
+from novaclient.v2 import cdroms
 from novaclient.v2 import certs
 from novaclient.v2 import cloudpipe
 from novaclient.v2 import fixed_ips
@@ -32,6 +33,7 @@ from novaclient.v2 import fping
 from novaclient.v2 import hosts
 from novaclient.v2 import hypervisors
 from novaclient.v2 import images
+from novaclient.v2 import isos
 from novaclient.v2 import keypairs
 from novaclient.v2 import limits
 from novaclient.v2 import networks
@@ -170,6 +172,8 @@ class Client(object):
         self.server_groups = server_groups.ServerGroupsManager(self)
         self.server_migrations = \
             server_migrations.ServerMigrationsManager(self)
+        self.cdroms = cdroms.CdromManager(self)
+        self.isos = isos.IsoManager(self)
 
         # Add in any extensions...
         if extensions:
