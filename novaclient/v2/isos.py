@@ -55,7 +55,7 @@ class IsoManager(base.ManagerWithFind):
         """
         path = '/servers/%s/action' % server
         post_body = {"ChangeISO": {"iso": iso}}
-        resp, body = self.api.client.post(path, post_body)
+        resp, body = self.api.client.post(path, body=post_body)
         return self.convert_into_with_meta(body, resp)
 
     def detach_iso(self, server):
@@ -68,5 +68,5 @@ class IsoManager(base.ManagerWithFind):
         """
         path = '/servers/%s/action' % server
         post_body = {"ChangeISO": {"iso": None}}
-        resp, body = self.api.client.post(path, post_body)
+        resp, body = self.api.client.post(path, body=post_body)
         return self.convert_into_with_meta(body, resp)
