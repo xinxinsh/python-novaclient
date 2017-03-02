@@ -294,9 +294,13 @@ def from_response(response, body, url, method=None):
         details = "n/a"
 
         if hasattr(body, 'keys'):
-            error = body[list(body)[0]]
-            message = error.get('message')
-            details = error.get('details')
+            if 'message' in body:
+                message = body.get('message')
+                details = body.get('details')
+            else:
+                error = body[list(body)[0]]
+                message = error.get('message')
+                details = error.get('details')
 
         kwargs['message'] = message
         kwargs['details'] = details
