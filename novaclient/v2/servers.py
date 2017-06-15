@@ -339,7 +339,7 @@ class Server(base.Resource):
                                     preserve_ephemeral=preserve_ephemeral,
                                     **kwargs)
 
-    def resize(self, flavor, **kwargs):
+    def resize(self, flavor, force_host=None, **kwargs):
         """
         Resize the server's resources.
 
@@ -351,7 +351,7 @@ class Server(base.Resource):
         flavor quickly with :meth:`revert_resize`. All resizes are
         automatically confirmed after 24 hours.
         """
-        return self.manager.resize(self, flavor, **kwargs)
+        return self.manager.resize(self, flavor, force_host=None, **kwargs)
 
     def resize_local(self, flavor, **kwargs):
         """
@@ -1424,7 +1424,8 @@ class ServerManager(base.BootingManagerWithFind):
         """
         return self._action('migrate', server)
 
-    def resize(self, server, flavor, disk_config=None, **kwargs):
+    def resize(self, server, flavor, force_host=None,
+               disk_config=None, **kwargs):
         """
         Resize a server's resources.
 
@@ -1439,7 +1440,11 @@ class ServerManager(base.BootingManagerWithFind):
         flavor quickly with :meth:`revert_resize`. All resizes are
         automatically confirmed after 24 hours.
         """
-        info = {'flavorRef': base.getid(flavor)}
+        if force_host is not None:
+            info = {'flavorRef': base.getid(flavor),
+                    'force_host': force_host}
+        else:
+            info = {'flavorRef': base.getid(flavor)}
         if disk_config is not None:
             info['OS-DCF:diskConfig'] = disk_config
 

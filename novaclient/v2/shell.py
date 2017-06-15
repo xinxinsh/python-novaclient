@@ -1741,6 +1741,10 @@ def do_update(cs, args):
     'flavor',
     metavar='<flavor>',
     help=_("Name or ID of new flavor."))
+@cliutils.arg('--forcehost',
+              default=None,
+              metavar='<forcehost>',
+              help=_("forcehost set vm to compute node"))
 @cliutils.arg(
     '--poll',
     dest='poll',
@@ -1752,7 +1756,7 @@ def do_resize(cs, args):
     server = _find_server(cs, args.server)
     flavor = _find_flavor(cs, args.flavor)
     kwargs = utils.get_resource_manager_extra_kwargs(do_resize, args)
-    server.resize(flavor, **kwargs)
+    server.resize(flavor, args.forcehost, **kwargs)
     if args.poll:
         _poll_for_status(cs.servers.get, server.id, 'resizing',
                          ['active', 'verify_resize'])
