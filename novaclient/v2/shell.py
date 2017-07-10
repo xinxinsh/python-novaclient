@@ -3942,6 +3942,11 @@ def do_live_migration_abort(cs, args):
     default='error', const='active',
     help=_('Request the server be reset to "active" state instead '
            'of "error" state (the default).'))
+@cliutils.arg(
+    '--previous', action='store_const', dest='state',
+    default='error', const='previous',
+    help=_('Request the server be reset to "previous" state instead '
+           'of "error" state (the default).'))
 def do_reset_state(cs, args):
     """Reset the state of a server."""
     failure_flag = False
