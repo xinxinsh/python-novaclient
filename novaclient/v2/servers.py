@@ -1839,3 +1839,9 @@ class ServerManager(base.BootingManagerWithFind):
         url = '/servers/%s/remote-consoles' % base.getid(server)
         resp, body = self.api.client.post(url, body=body)
         return self.convert_into_with_meta(body, resp)
+ 
+    def connection_info(self, server):
+        """
+        Return connection info of root disk
+        """
+        return self._get("/servers/%s/disk" % base.getid(server))
