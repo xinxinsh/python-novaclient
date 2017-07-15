@@ -1844,4 +1844,4 @@ class ServerManager(base.BootingManagerWithFind):
         """
         Return connection info of root disk
         """
-        return self._get("/servers/%s/disk" % base.getid(server))
+        return self._get("/servers/%s/disk" % base.getid(server), None)

@@ -337,7 +337,11 @@ class Manager(HookableMixin):
 
     def _get(self, url, response_key):
         resp, body = self.api.client.get(url)
-        return self.resource_class(self, body[response_key], loaded=True,
+        if response_key is not None:
+            content = body[response_key]
+        else:
+            content = body
+        return self.resource_class(self, content, loaded=True,
                                    resp=resp)
 
     def _create(self, url, body, response_key, return_raw=False, **kwargs):
