@@ -1845,3 +1845,16 @@ class ServerManager(base.BootingManagerWithFind):
         Return connection info of root disk
         """
         return self._get("/servers/%s/disk" % base.getid(server), None)
+    
+    def update_task(self, server, state, expected_state=None):
+        """
+        Update Task state of a server
+
+        :param server: The :class:`Server` (or its ID) to share onto.
+        :param image_name: Name to give the snapshot image
+        :param metadata: Metadata to give newly-created image entity
+        :returns:
+        """
+        body = {'state': state, 'expected_state': expected_state}
+        return self._action('updateTask', server, body)
+
