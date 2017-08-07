@@ -588,7 +588,7 @@ class ServerManager(base.BootingManagerWithFind):
               block_device_mapping_v2=None, nics=None, scheduler_hints=None,
               config_drive=None, admin_pass=None, disk_config=None,
               access_ip_v4=None, access_ip_v6=None, description=None,
-              **kwargs):
+              subnet_id=None, **kwargs):
         """
         Create (boot) a new server.
         """
@@ -712,6 +712,9 @@ class ServerManager(base.BootingManagerWithFind):
 
         if description:
             body['server']['description'] = description
+
+        if subnet_id:
+            body['server']['subnet_id'] = subnet_id
 
         return self._create(resource_url, body, response_key,
                             return_raw=return_raw, **kwargs)
@@ -1195,7 +1198,8 @@ class ServerManager(base.BootingManagerWithFind):
                block_device_mapping=None, block_device_mapping_v2=None,
                nics=None, scheduler_hints=None,
                config_drive=None, disk_config=None, admin_pass=None,
-               access_ip_v4=None, access_ip_v6=None, **kwargs):
+               access_ip_v4=None, access_ip_v6=None, subnet_id=None,
+               **kwargs):
         # TODO(anthony): indicate in doc string if param is an extension
         # and/or optional
         """
@@ -1244,6 +1248,7 @@ class ServerManager(base.BootingManagerWithFind):
         :param access_ip_v6: (optional extension) add alternative access ip v6
         :param description: optional description of the server (allowed since
                             microversion 2.19)
+        :param subnet_id: Set net_id/subnet_id/static_ip when Neocu create vm
         """
         if not min_count:
             min_count = 1
@@ -1265,7 +1270,8 @@ class ServerManager(base.BootingManagerWithFind):
             key_name=key_name, availability_zone=availability_zone,
             scheduler_hints=scheduler_hints, config_drive=config_drive,
             disk_config=disk_config, admin_pass=admin_pass,
-            access_ip_v4=access_ip_v4, access_ip_v6=access_ip_v6, **kwargs)
+            access_ip_v4=access_ip_v4, access_ip_v6=access_ip_v6,
+            subnet_id=subnet_id, **kwargs)
 
         if block_device_mapping:
             resource_url = "/os-volumes_boot"
